@@ -1,5 +1,7 @@
 // import * as bcrypt from "bcrypt"; // not support in my dev enviroment :(
 
+import { ObjectId } from "mongodb";
+
 const emailRegex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -29,4 +31,12 @@ export const displayNameParser = (displayName: string) => {
   }
 
   return displayName;
+};
+
+export const objectIdParser = (id: string) => {
+  if (!id || !ObjectId.isValid(id)) {
+    return null;
+  }
+
+  return new ObjectId(id);
 };

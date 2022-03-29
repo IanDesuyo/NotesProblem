@@ -2,7 +2,10 @@ import { MongoClient, Db } from "mongodb";
 import { APIGatewayEvent } from "aws-lambda";
 import routes from "./routes";
 import { HttpMethod } from "./types";
+import { S3, Textract } from "aws-sdk";
 
+const s3 = new S3();
+const textract = new Textract();
 var dbCache: Db;
 
 const getDB = async () => {
@@ -24,6 +27,11 @@ const getHandler = (event: APIGatewayEvent) => {
 
   const routeHandler = routes[path][method];
 
+  if (!routeHandler) {
+    console.log(`${method} ${path}: not found, should be ${Object.keys(routes[path])}`);
+  } else {
+    console.log(`${method} ${path}: found`);
+  }
   return routeHandler;
 };
 
@@ -36,9 +44,16 @@ export const handler = async (event: APIGatewayEvent) => {
       statusCode: 500,
       body: JSON.stringify({
         message: "You should never see this",
+        event: {
+          method: event.httpMethod,
+          path: event.resource,
+          body: event.body,
+          queryStringParameters: event.queryStringParameters,
+          pathParameters: event.pathParameters,
+        },
       }),
     };
   }
 
-  return await routeHandler({ db }, event);
+  return await routeHandler({ db, s3, textract }, event);
 };

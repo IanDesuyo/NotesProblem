@@ -1,14 +1,23 @@
 import { APIGatewayEvent } from "aws-lambda";
-import { App } from "../types";
+import { ObjectId } from "mongodb";
+import { App } from "../../types";
 
-const loginUser = async (app: App, email: string, password: string) => {
+const projection = {
+  $project: {
+    password: 0,
+    email: 0,
+    emailVerified: 0,
+  },
+};
+
+const login = async (app: App, email: string, password: string) => {
   const collection = app.db.collection("Users");
   const user = await collection.findOne({ email, password });
 
   return user;
 };
 
-const createUser = async (app: App, email: string, password: string, displayName: string) => {
+const create = async (app: App, email: string, password: string, displayName: string) => {
   const collection = app.db.collection("Users");
 
   // check if email is already in use
@@ -25,7 +34,7 @@ const createUser = async (app: App, email: string, password: string, displayName
     displayName,
     password,
     email,
-    createdAt: Math.floor(new Date().getTime() / 1000),
+    createdAt: new Date(),
     emailVerified: false,
   });
 
@@ -36,15 +45,26 @@ const createUser = async (app: App, email: string, password: string, displayName
   };
 };
 
-const getCurrentUser = async (app: App, event: APIGatewayEvent) => {
+const get = async (app: App, id: ObjectId) => {
   const collection = app.db.collection("Users");
-  const userId = parseInt(event.requestContext.authorizer.numberKey);
 
-  return await collection.findOne({ id: userId });
+  const user = await collection
+    .aggregate([
+      {
+        $match: {
+          _id: new ObjectId(id),
+        },
+      },
+      projection,
+    ])
+    .limit(1)
+    .toArray();
+
+  return user[0];
 };
 
 export default {
-  loginUser,
-  createUser,
-  getCurrentUser,
+  login,
+  create,
+  get,
 };

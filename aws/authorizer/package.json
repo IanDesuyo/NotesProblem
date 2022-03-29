@@ -2,19 +2,18 @@
   "name": "authorizer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "@types/aws-lambda": "^8.10.93",
-    "@types/jsonwebtoken": "^8.5.8",
-    "jsonwebtoken": "^8.5.1",
-    "typescript": "^4.6.3"
-  },
-  "devDependencies": {},
+  "main": "build/index.js",
   "scripts": {
     "prebuild": "del authorizer.zip",
     "build": "tsc",
     "postbuild": "7z a authorizer.zip *"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.93",
+    "@types/jsonwebtoken": "^8.5.8",
+    "jsonwebtoken": "^8.5.1",
+    "typescript": "^4.6.3"
+  }
 }

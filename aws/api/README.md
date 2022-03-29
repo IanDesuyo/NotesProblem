@@ -1,6 +1,6 @@
 # API Gateway Lambda Proxy Integration
 
-Set the environment variable `JWT_SECRET`, `PASSWORD_SALT`, `MONGODB_URI` and `MONGODB_DB` first.
+Set the environment variable `JWT_SECRET`, `PASSWORD_SALT`, `MONGODB_URI` and `MONGODB_DB`, `S3_BUCKET` first.
 Make sure every endpoint are using Lambda Proxy integration,
 so the lambda function can receive the request event which contains the request body, path, method and headers.
 

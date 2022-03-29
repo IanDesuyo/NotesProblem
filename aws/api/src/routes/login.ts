@@ -19,7 +19,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
     });
   }
 
-  const user = await dbManager.loginUser(app, email, password);
+  const user = await dbManager.account.login(app, email, password);
 
   if (!user) {
     return response(401, {

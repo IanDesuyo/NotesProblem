@@ -21,7 +21,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
   }
 
   try {
-    const user = await dbManager.createUser(app, email, password, displayName);
+    const user = await dbManager.account.create(app, email, password, displayName);
 
     const payload = {
       displayName: user.displayName,
