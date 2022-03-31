@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { App } from "../../types";
+import { NewNote } from "../../types/note";
 
 const lookup = [
   {
@@ -49,9 +50,18 @@ const search = async (app: App, search?: string, page: number = 0) => {
     ? [
         {
           $match: {
-            $text: {
-              $search: search,
-            },
+            $or: [
+              {
+                $text: {
+                  $search: search,
+                },
+              },
+              {
+                hashtags: {
+                  $in: [search],
+                },
+              },
+            ],
           },
         },
         {
@@ -73,7 +83,19 @@ const search = async (app: App, search?: string, page: number = 0) => {
   return notes;
 };
 
+const create = async (app: App, data: NewNote) => {
+  const collection = app.db.collection("Notes");
+
+  const note = await collection.insertOne({
+    ...data,
+    createdAt: new Date(),
+  });
+
+  return note;
+};
+
 export default {
   get,
   search,
+  create,
 };

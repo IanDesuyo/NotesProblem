@@ -4,6 +4,7 @@ import { App } from "../../types";
 import response from "../../utils/response";
 import { Path } from "../../types/route";
 import dbManager from "../../utils/dbManager";
+import newNote from "./new";
 
 const GET = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   const params = event.queryStringParameters;
@@ -82,3 +83,5 @@ export default {
   GET,
   POST,
 } as Path;
+
+export { newNote };

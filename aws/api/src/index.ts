@@ -4,9 +4,11 @@ import routes from "./routes";
 import { HttpMethod } from "./types";
 import { S3, Textract } from "aws-sdk";
 
-const s3 = new S3();
-const textract = new Textract();
 var dbCache: Db;
+const textract = new Textract();
+const s3 = new S3({
+  signatureVersion: "v4",
+});
 
 const getDB = async () => {
   if (dbCache) {
@@ -28,9 +30,7 @@ const getHandler = (event: APIGatewayEvent) => {
   const routeHandler = routes[path][method];
 
   if (!routeHandler) {
-    console.log(`${method} ${path}: not found, should be ${Object.keys(routes[path])}`);
-  } else {
-    console.log(`${method} ${path}: found`);
+    console.warn(`${method} ${path}: not found, should be ${Object.keys(routes[path])}`);
   }
   return routeHandler;
 };
