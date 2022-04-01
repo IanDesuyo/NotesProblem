@@ -1,0 +1,213 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "NotesProblem",
+  "dateExported": "2022-04-01T15:10:25.475Z",
+  "version": "1.1",
+  "folders": [
+    {
+      "containerId": "",
+      "sortNum": 10000,
+      "name": "Users",
+      "_id": "9fed1ccd-b03a-42e3-a467-748730c6d277",
+      "created": "2022-03-29T14:45:45.750Z"
+    },
+    {
+      "containerId": "",
+      "sortNum": 20000,
+      "name": "Notes",
+      "_id": "77f0efe5-71cd-4409-acd1-5719ba4149ed",
+      "created": "2022-03-29T14:45:53.155Z"
+    }
+  ],
+  "requests": [
+    {
+      "containerId": "9fed1ccd-b03a-42e3-a467-748730c6d277",
+      "sortNum": 10000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+      ],
+      "colId": "50e96628-9e8c-4898-b4e4-4ee8eb374863",
+      "name": "Login",
+      "url": "{{API_URL}}/login",
+      "method": "POST",
+      "modified": "2022-03-29T14:45:47.654Z",
+      "created": "2022-03-29T14:11:04.080Z",
+      "_id": "896d08c7-0734-43ec-a16b-b17ac52a1a95",
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}",
+        "form": []
+      },
+      "tests": [
+        { "type": "res-body", "custom": "", "action": "isjson", "value": "" },
+        { "type": "res-code", "custom": "", "action": "equal", "value": "200" },
+        {
+          "type": "json-query",
+          "custom": "json.data.token",
+          "action": "istype",
+          "value": "string"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.data.payload",
+          "action": "istype",
+          "value": "object"
+        }
+      ]
+    },
+    {
+      "containerId": "9fed1ccd-b03a-42e3-a467-748730c6d277",
+      "sortNum": 20000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+      ],
+      "colId": "50e96628-9e8c-4898-b4e4-4ee8eb374863",
+      "name": "Register",
+      "url": "{{API_URL}}/register",
+      "method": "POST",
+      "modified": "2022-03-29T14:50:58.875Z",
+      "created": "2022-03-29T14:44:04.143Z",
+      "_id": "a32ac637-bf2f-4870-9c4d-c06bd7556dc3",
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\",\n  \"displayName\": \"Test Account\"\n}",
+        "form": []
+      },
+      "tests": [
+        { "type": "Content-Type", "custom": "", "action": "isjson", "value": "" },
+        { "type": "res-code", "custom": "", "action": "equal", "value": "200" },
+        { "type": "res-code", "custom": "", "action": "equal", "value": "400" }
+      ]
+    },
+    {
+      "containerId": "77f0efe5-71cd-4409-acd1-5719ba4149ed",
+      "sortNum": 40000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+      ],
+      "colId": "50e96628-9e8c-4898-b4e4-4ee8eb374863",
+      "name": "Get",
+      "url": "{{API_URL}}/note/{{TEST_NOTE_ID}}",
+      "method": "GET",
+      "modified": "2022-03-29T14:52:41.284Z",
+      "created": "2022-03-29T14:46:04.109Z",
+      "_id": "7dd44193-db83-4f31-bf14-fddf4ee4b23d",
+      "params": [],
+      "tests": [
+        { "type": "res-body", "custom": "", "action": "isjson", "value": "" },
+        { "type": "res-code", "custom": "", "action": "equal", "value": "200" },
+        { "type": "json-query", "custom": "json.data._id", "action": "istype", "value": "string" },
+        {
+          "type": "json-query",
+          "custom": "json.data.author._id",
+          "action": "istype",
+          "value": "string"
+        }
+      ]
+    },
+    {
+      "containerId": "77f0efe5-71cd-4409-acd1-5719ba4149ed",
+      "sortNum": 45000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+      ],
+      "colId": "50e96628-9e8c-4898-b4e4-4ee8eb374863",
+      "name": "Search",
+      "url": "{{API_URL}}/notes?search&page",
+      "method": "GET",
+      "modified": "2022-03-29T14:54:57.823Z",
+      "created": "2022-03-29T14:52:47.081Z",
+      "_id": "2fc1a31d-2795-43f0-baf9-6a46fe0291d1",
+      "params": [
+        { "name": "search", "value": "", "isPath": false },
+        { "name": "page", "value": "", "isPath": false }
+      ],
+      "tests": [
+        { "type": "res-body", "custom": "", "action": "isjson", "value": "" },
+        { "type": "res-code", "custom": "", "action": "equal", "value": "200" },
+        { "type": "json-query", "custom": "json.data", "action": "istype", "value": "array" },
+        {
+          "type": "json-query",
+          "custom": "json.data[0]._id",
+          "action": "istype",
+          "value": "string"
+        },
+        {
+          "type": "json-query",
+          "custom": "json.data[0].author._id",
+          "action": "istype",
+          "value": "string"
+        }
+      ]
+    },
+    {
+      "containerId": "9fed1ccd-b03a-42e3-a467-748730c6d277",
+      "sortNum": 60000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+      ],
+      "colId": "50e96628-9e8c-4898-b4e4-4ee8eb374863",
+      "name": "Get",
+      "url": "{{API_URL}}/user/{{TEST_USER_ID}}",
+      "method": "GET",
+      "modified": "2022-03-29T15:31:54.912Z",
+      "created": "2022-03-29T15:25:43.181Z",
+      "_id": "deb00e15-cd74-4a8e-9bee-8e07179cb63c",
+      "params": [],
+      "tests": []
+    },
+    {
+      "containerId": "9fed1ccd-b03a-42e3-a467-748730c6d277",
+      "sortNum": 70000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" },
+        { "name": "Authorization", "value": "{{TEST_USER_TOKEN}}" }
+      ],
+      "colId": "50e96628-9e8c-4898-b4e4-4ee8eb374863",
+      "name": "Get Me",
+      "url": "{{API_URL}}/user/me",
+      "method": "GET",
+      "modified": "2022-04-01T15:08:13.490Z",
+      "created": "2022-03-29T15:31:40.673Z",
+      "_id": "8972688f-b591-44e8-a097-c48c11fdde01",
+      "params": [],
+      "tests": []
+    },
+    {
+      "containerId": "77f0efe5-71cd-4409-acd1-5719ba4149ed",
+      "sortNum": 87500,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" },
+        { "name": "Authorization", "value": "{{TEST_USER_TOKEN}}" }
+      ],
+      "colId": "50e96628-9e8c-4898-b4e4-4ee8eb374863",
+      "name": "Upload",
+      "url": "{{API_URL}}/notes",
+      "method": "POST",
+      "modified": "2022-04-01T15:08:02.223Z",
+      "created": "2022-03-31T14:04:57.561Z",
+      "_id": "c597a957-e1f3-4415-8dcc-9718fae6d34d",
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"Test Note\",\n  \"hashtags\": [\"test\"],\n  \"file\": {\n    \"body\": \"***REMOVED***\",\n    \"type\": \"image/png\"\n  }\n}",
+        "form": []
+      },
+      "tests": [
+        { "type": "res-body", "custom": "", "action": "isjson", "value": "" },
+        { "type": "res-code", "custom": "", "action": "equal", "value": "200" },
+        { "type": "json-query", "custom": "json.data", "action": "istype", "value": "object" }
+      ]
+    }
+  ],
+  "settings": { "headers": [], "tests": [], "envId": "9df83cdc-2ca9-4968-a57d-c3099c4306af" }
+}

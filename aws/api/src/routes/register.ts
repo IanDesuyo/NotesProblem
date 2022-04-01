@@ -9,6 +9,7 @@ import { displayNameParser, emailParser, passwordParser } from "../utils/parser"
 const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   const data = JSON.parse(event.body);
 
+  // validate data
   const { email } = emailParser(data.email);
   const password = await passwordParser(data.password);
   const displayName = displayNameParser(data.displayName);
@@ -21,8 +22,10 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
   }
 
   try {
+    // create a new user
     const user = await dbManager.account.create(app, email, password, displayName);
 
+    // create jwt for user
     const payload = {
       displayName: user.displayName,
       userId: user._id.toHexString(),
@@ -36,6 +39,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
       data: { token, payload },
     });
   } catch (err) {
+    // throw error if email already exists
     return response(400, {
       message: err.message,
       i18n: err.i18n,

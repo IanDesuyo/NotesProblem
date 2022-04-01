@@ -10,6 +10,13 @@ const projection = {
   },
 };
 
+/**
+ * Get user by email and password.
+ * @param app - App instance
+ * @param email - Email address
+ * @param password - Password
+ * @returns User data if found, otherwise null
+ */
 const login = async (app: App, email: string, password: string) => {
   const collection = app.db.collection("Users");
   const user = await collection.findOne({ email, password });
@@ -17,6 +24,15 @@ const login = async (app: App, email: string, password: string) => {
   return user;
 };
 
+/**
+ * Create a new user.
+ * @param app - App instance
+ * @param email -  Email address
+ * @param password - Password
+ * @param displayName - Display name
+ * @returns Created user id, display name, and email
+ * @throws Error if user already exists
+ */
 const create = async (app: App, email: string, password: string, displayName: string) => {
   const collection = app.db.collection("Users");
 
@@ -45,6 +61,12 @@ const create = async (app: App, email: string, password: string, displayName: st
   };
 };
 
+/**
+ * Get user by id.
+ * @param app - App instance
+ * @param id - User id
+ * @returns User data if found, otherwise null
+ */
 const get = async (app: App, id: ObjectId) => {
   const collection = app.db.collection("Users");
 
@@ -63,8 +85,31 @@ const get = async (app: App, id: ObjectId) => {
   return user[0];
 };
 
+/**
+ * Get user by id.
+ * @param app - App instance
+ * @param id - User id
+ * @param data - User data to update
+ * @returns MongoDB update result
+ */
+const update = async (app: App, id: ObjectId, data: any[]) => {
+  const collection = app.db.collection("Users");
+
+  const user = await collection.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $set: data,
+    }
+  );
+
+  return user;
+};
+
 export default {
   login,
   create,
   get,
+  update,
 };

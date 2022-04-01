@@ -7,6 +7,8 @@ import { objectIdParser } from "../../utils/parser";
 
 const GET = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   const params = event.pathParameters;
+
+  // validate data
   const id = objectIdParser(params.id);
 
   if (!id) {
@@ -16,6 +18,7 @@ const GET = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRes
     });
   }
 
+  // get note from db
   const note = await dbManager.note.get(app, id);
 
   if (!note) {

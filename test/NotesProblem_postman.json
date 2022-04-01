@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "NotesProblem",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{API_URL}}/login", "host": ["{{api_url}}"], "path": ["login"] },
+            "header": [
+              { "key": "Accept", "value": "*/*" },
+              { "key": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{API_URL}}/register", "host": ["{{api_url}}"], "path": ["register"] },
+            "header": [
+              { "key": "Accept", "value": "*/*" },
+              { "key": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"{{TEST_PASSWORD}}\",\n  \"displayName\": \"Test Account\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{API_URL}}/user/{{TEST_USER_ID}}",
+              "host": ["{{api_url}}"],
+              "path": ["user", "%7B%7BTEST_USER_ID%7D%7D"]
+            },
+            "header": [
+              { "key": "Accept", "value": "*/*" },
+              { "key": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+            ]
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{API_URL}}/user/me",
+              "host": ["{{api_url}}"],
+              "path": ["user", "me"]
+            },
+            "header": [
+              { "key": "Accept", "value": "*/*" },
+              { "key": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" },
+              { "key": "Authorization", "value": "{{TEST_USER_TOKEN}}" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notes",
+      "item": [
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{API_URL}}/note/{{TEST_NOTE_ID}}",
+              "host": ["{{api_url}}"],
+              "path": ["note", "%7B%7BTEST_NOTE_ID%7D%7D"]
+            },
+            "header": [
+              { "key": "Accept", "value": "*/*" },
+              { "key": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+            ]
+          }
+        },
+        {
+          "name": "Search",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{API_URL}}/notes?search&page",
+              "query": [
+                { "key": "search", "value": "" },
+                { "key": "page", "value": "" }
+              ],
+              "variable": [],
+              "host": ["{{api_url}}"],
+              "path": ["notes"]
+            },
+            "header": [
+              { "key": "Accept", "value": "*/*" },
+              { "key": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" }
+            ]
+          }
+        },
+        {
+          "name": "Upload",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{API_URL}}/notes", "host": ["{{api_url}}"], "path": ["notes"] },
+            "header": [
+              { "key": "Accept", "value": "*/*" },
+              { "key": "User-Agent", "value": "Thunder Client (https://www.thunderclient.com)" },
+              { "key": "Authorization", "value": "{{TEST_USER_TOKEN}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Test Note\",\n  \"hashtags\": [\"test\"],\n  \"file\": {\n    \"body\": \"***REMOVED***\",\n    \"type\": \"image/png\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

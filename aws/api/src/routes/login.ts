@@ -9,6 +9,7 @@ import { emailParser, passwordParser } from "../utils/parser";
 const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   const data = JSON.parse(event.body);
 
+  // validate data
   const { email } = emailParser(data.email);
   const password = await passwordParser(data.password);
 
@@ -19,6 +20,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
     });
   }
 
+  // get user from db
   const user = await dbManager.account.login(app, email, password);
 
   if (!user) {
@@ -28,6 +30,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
     });
   }
 
+  // create jwt for user
   const payload = {
     displayName: user.displayName,
     userId: user._id.toHexString(),

@@ -6,6 +6,12 @@ import {
 import * as jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
 
+/**
+ * The main function.
+ * @param event - The event object
+ * @param _context - The context object
+ * @param callback - The callback function to return the response
+ */
 export const handler = (
   event: APIGatewayTokenAuthorizerEvent,
   _context: any,
@@ -24,6 +30,13 @@ export const handler = (
   }
 };
 
+/**
+ * Generate a policy object.
+ * @param payload - The payload object from the jwt
+ * @param allow - Whether the user is allowed to access the resource
+ * @param resource - The resource string
+ * @returns The policy object
+ */
 const generatePolicy = (payload: JwtPayload, allow: boolean, resource: string) => {
   return {
     principalId: payload.displayName || "Anonymous",

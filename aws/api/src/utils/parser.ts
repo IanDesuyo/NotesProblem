@@ -5,6 +5,11 @@ import { ObjectId } from "mongodb";
 const emailRegex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+/**
+ * Check if string is a valid email address.
+ * @param email - Email address
+ * @returns Account and domain of the email address if valid, otherwise null
+ */
 export const emailParser = (email: string) => {
   const res = emailRegex.exec(email);
 
@@ -15,6 +20,11 @@ export const emailParser = (email: string) => {
   return { email, account: res[1], domain: res[5] };
 };
 
+/**
+ * Check if string is a valid password and return the hash if valid.
+ * @param password - Password
+ * @returns Hash of the password if valid, otherwise null
+ */
 export const passwordParser = async (password: string) => {
   if (!password || password.length < 8 || password.length > 32) {
     return null;
@@ -25,6 +35,11 @@ export const passwordParser = async (password: string) => {
   return Buffer.from(password).toString("base64");
 };
 
+/**
+ * Check if string is a valid display name.
+ * @param displayName - Display name
+ * @returns Display name if valid, otherwise null
+ */
 export const displayNameParser = (displayName: string) => {
   if (!displayName || displayName.length < 2 || displayName.length > 32) {
     return null;
@@ -33,6 +48,11 @@ export const displayNameParser = (displayName: string) => {
   return displayName;
 };
 
+/**
+ * Check if string is a valid object id.
+ * @param id - A string of 24 hex characters
+ * @returns ObjectId if valid, otherwise null
+ */
 export const objectIdParser = (id: string) => {
   if (!id || !ObjectId.isValid(id)) {
     return null;

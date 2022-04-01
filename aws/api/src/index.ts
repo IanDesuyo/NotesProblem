@@ -2,7 +2,8 @@ import { MongoClient, Db } from "mongodb";
 import { APIGatewayEvent } from "aws-lambda";
 import routes from "./routes";
 import { HttpMethod } from "./types";
-import { S3, Textract } from "aws-sdk";
+import S3 = require("aws-sdk/clients/s3");
+import Textract = require("aws-sdk/clients/textract");
 
 var dbCache: Db;
 const textract = new Textract();
@@ -10,6 +11,10 @@ const s3 = new S3({
   signatureVersion: "v4",
 });
 
+/**
+ * Get db instance from cache or create a new one.
+ * @returns MongoDB instance
+ */
 const getDB = async () => {
   if (dbCache) {
     return dbCache;
@@ -23,6 +28,11 @@ const getDB = async () => {
   return db;
 };
 
+/**
+ * Get the handler function for the given event.
+ * @param event - The event object
+ * @returns A handler function for the event if found, otherwise null
+ */
 const getHandler = (event: APIGatewayEvent) => {
   const path = event.resource; // use resource to get the path without parameters like /note/{id}
   const method = event.httpMethod as HttpMethod;
@@ -35,6 +45,11 @@ const getHandler = (event: APIGatewayEvent) => {
   return routeHandler;
 };
 
+/**
+ * The main function.
+ * @param event - The event object
+ * @returns API Gateway response object
+ */
 export const handler = async (event: APIGatewayEvent) => {
   const db = await getDB();
   const routeHandler = getHandler(event);

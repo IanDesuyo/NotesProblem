@@ -6,7 +6,9 @@ import dbManager from "../../utils/dbManager";
 import { objectIdParser } from "../../utils/parser";
 
 const GET = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
+  // get user id if request is authenticated
   let id;
+
   if (event.resource === "/user/me") {
     id = objectIdParser(event.requestContext.authorizer.userId);
   } else {
@@ -21,6 +23,7 @@ const GET = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRes
     });
   }
 
+  // get user from db
   const user = await dbManager.account.get(app, id);
 
   if (!user) {
