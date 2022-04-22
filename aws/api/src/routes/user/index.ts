@@ -4,10 +4,11 @@ import response from "../../utils/response";
 import { Path } from "../../types/route";
 import dbManager from "../../utils/dbManager";
 import { objectIdParser } from "../../utils/parser";
+import { ObjectId } from "mongodb";
 
 const GET = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   // get user id if request is authenticated
-  let id;
+  let id: ObjectId;
 
   if (event.resource === "/user/me") {
     id = objectIdParser(event.requestContext.authorizer.userId);

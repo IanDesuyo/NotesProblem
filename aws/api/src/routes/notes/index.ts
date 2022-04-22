@@ -5,6 +5,7 @@ import response from "../../utils/response";
 import { Path } from "../../types/route";
 import dbManager from "../../utils/dbManager";
 import { objectIdParser } from "../../utils/parser";
+import textractParser from "../../utils/textractParser";
 
 const GET = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   const params = event.queryStringParameters;
@@ -90,12 +91,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
       })
       .promise();
 
-    content = textResult.Blocks.reduce((acc, block) => {
-      if (block.BlockType === "LINE") {
-        return acc + block.Text + "\n";
-      }
-      return acc;
-    }, "");
+    content = textractParser(textResult);
   }
 
   // create a new note
