@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap");
+@font-face {
+  font-family: "jf openhuninn";
+  src: url("../public/static/jf-openhuninn-1.1.woff2");
+}
+
+* {
+  font-family: "Noto Sans TC", sans-serif;
+}
+
+.line-break {
+  white-space: pre-wrap;
+}
