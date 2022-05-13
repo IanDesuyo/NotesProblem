@@ -5,9 +5,10 @@ import dbManager from "../utils/dbManager";
 import response from "../utils/response";
 import { Path } from "../types/route";
 import { displayNameParser, emailParser, passwordParser } from "../utils/parser";
+import { RegisterRequestBody } from "../types/requestBody";
 
 const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
-  const data = JSON.parse(event.body);
+  const data = JSON.parse(event.body) as RegisterRequestBody;
 
   // validate data
   const { email } = emailParser(data.email);
@@ -40,7 +41,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
     });
   } catch (err) {
     // throw error if email already exists
-    return response(400, {
+    return response(err.status, {
       message: err.message,
       i18n: err.i18n,
     });

@@ -22,7 +22,7 @@ export const emailParser = (email: string) => {
 
 /**
  * Check if string is a valid password and return the hash if valid.
- * @param password - Password
+ * @param password - Password hsah
  * @returns Hash of the password if valid, otherwise null
  */
 export const passwordParser = async (password: string) => {
@@ -59,4 +59,32 @@ export const objectIdParser = (id: string) => {
   }
 
   return new ObjectId(id);
+};
+
+/**
+ * Check the jwt and return the payload if valid.
+ * @param token jwt
+ */
+export const tokenParser = (token: string) => {
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const payload = token.split(".")[1];
+
+    if (!payload) {
+      return null;
+    }
+
+    const data = JSON.parse(Buffer.from(payload, "base64").toString("utf8")) as {
+      displayName: string;
+      userId: string;
+      exp: number;
+    };
+
+    return data;
+  } catch (e) {
+    return null;
+  }
 };

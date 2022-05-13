@@ -70,5 +70,6 @@ export const handler = async (event: APIGatewayEvent) => {
     };
   }
 
+  console.log(`${event.httpMethod} ${event.resource} ${event.requestContext.authorizer}`);
   return await routeHandler({ db, s3, textract }, event);
 };

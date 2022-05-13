@@ -1,12 +1,11 @@
-import { APIGatewayEvent } from "aws-lambda";
 import { ObjectId } from "mongodb";
 import { App } from "../../types";
 
 const projection = {
   $project: {
-    password: 0,
-    email: 0,
-    emailVerified: 0,
+    displayName: 1,
+    bio: 1,
+    createdAt: 1,
   },
 };
 
@@ -14,7 +13,7 @@ const projection = {
  * Get user by email and password.
  * @param app - App instance
  * @param email - Email address
- * @param password - Password
+ * @param password - Password hsah
  * @returns User data if found, otherwise null
  */
 const login = async (app: App, email: string, password: string) => {
@@ -28,7 +27,7 @@ const login = async (app: App, email: string, password: string) => {
  * Create a new user.
  * @param app - App instance
  * @param email -  Email address
- * @param password - Password
+ * @param password - Password hsah
  * @param displayName - Display name
  * @returns Created user id, display name, and email
  * @throws Error if user already exists
@@ -41,6 +40,7 @@ const create = async (app: App, email: string, password: string, displayName: st
 
   if (user) {
     throw {
+      status: 409,
       message: "Email is already in use",
       i18n: "register.invlaidEmail",
     };

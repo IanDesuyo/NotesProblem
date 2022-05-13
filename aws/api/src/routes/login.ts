@@ -5,9 +5,10 @@ import dbManager from "../utils/dbManager";
 import response from "../utils/response";
 import { Path } from "../types/route";
 import { emailParser, passwordParser } from "../utils/parser";
+import { LoginRequestBody } from "../types/requestBody";
 
 const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
-  const data = JSON.parse(event.body);
+  const data = JSON.parse(event.body) as LoginRequestBody;
 
   // validate data
   const { email } = emailParser(data.email);

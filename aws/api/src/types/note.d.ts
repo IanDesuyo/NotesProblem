@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { Privacy } from ".";
 
 export interface NewNote {
   title: string;
@@ -6,4 +7,12 @@ export interface NewNote {
   content?: string;
   authorId: ObjectId;
   originalFile?: string;
+  privacy: Privacy;
+}
+
+export interface UpdateNote {
+  title?: string;
+  hashtags?: string[];
+  content?: string;
+  privacy?: Privacy;
 }
