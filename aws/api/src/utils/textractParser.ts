@@ -31,7 +31,7 @@ const textractParser = (data: DetectDocumentTextResponse) => {
     currentX = line.Geometry.BoundingBox.Left;
 
     if (isNewLine) {
-      content += "\n";
+      content += "\n\n";
       // find the nearest xLevel
       const nearestXLevels = xLevels.reduce((prev, curr) => {
         return Math.abs(curr - currentX) < Math.abs(prev - currentX) ? curr : prev;

@@ -30,6 +30,25 @@ const projection = {
     "author._id": 1,
     "author.displayName": 1,
     "author.createdAt": 1,
+    aiComment: 1,
+    aiCommentAt: 1,
+    audio: 1,
+  },
+};
+
+const searchProjection = {
+  $project: {
+    title: 1,
+    content: { $substr: ["$content", 0, 500] },
+    createdAt: 1,
+    updatedAt: 1,
+    hashtags: 1,
+    like: 1,
+    likeAt: 1,
+    likes: 1,
+    "author._id": 1,
+    "author.displayName": 1,
+    "author.createdAt": 1,
   },
 };
 
@@ -77,28 +96,26 @@ const searchQuery = (search: string) => {
   return [
     {
       $match: {
-        $or: [
-          {
-            $text: {
-              $search: search,
-            },
-          },
-          {
-            hashtags: {
-              $in: [search],
-            },
-          },
-        ],
-      },
-    },
-    {
-      $sort: {
-        score: {
-          $meta: "textScore",
+        $text: {
+          $search: search,
         },
       },
     },
   ];
+};
+
+const searchSort = {
+  $sort: {
+    score: {
+      $meta: "textScore",
+    },
+  },
+};
+
+const defaultSort = {
+  $sort: {
+    createdAt: -1,
+  },
 };
 
 /**
@@ -111,7 +128,7 @@ const searchQuery = (search: string) => {
 const get = async (app: App, id: ObjectId, userId?: ObjectId) => {
   const collection = app.db.collection("Notes");
 
-  const note = await collection
+  const notes = await collection
     .aggregate([
       {
         $match: {
@@ -125,7 +142,42 @@ const get = async (app: App, id: ObjectId, userId?: ObjectId) => {
     .limit(1)
     .toArray();
 
-  return note[0] || null;
+  const note = notes[0];
+
+  if (note && note.likes > 50 && !note.aiComment) {
+    // run in background
+    console.log("Generating AI comment");
+    const res = await app.openai.createCompletion("text-curie-001", {
+      prompt: `${note.content} \nTL; DR\n`,
+      temperature: 0.3,
+      max_tokens: 512,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+
+    if (res.status === 200) {
+      const comment = res.data.choices.map(choice => choice.text).join("\n");
+
+      console.log(res, comment);
+
+      await collection.updateOne(
+        {
+          _id: note._id,
+        },
+        {
+          $set: {
+            aiComment: comment,
+            aiCommentAt: new Date(),
+          },
+        }
+      );
+
+      console.log(`AI comment created for note ${note._id}`);
+    }
+  }
+
+  return note || null;
 };
 
 /**
@@ -141,11 +193,12 @@ const search = async (app: App, search?: string, page: number = 0, userId?: Obje
 
   const notes = await collection
     .aggregate([
-      { $match: { privacy: Privacy.PUBLIC } },
       ...(search ? searchQuery(search) : []),
+      { $match: { privacy: Privacy.PUBLIC } },
       ...lookupAuthor,
       ...(userId ? lookupLike(userId) : []),
-      projection,
+      searchProjection,
+      search ? searchSort : defaultSort,
     ])
     .skip(page * 10)
     .limit(10)

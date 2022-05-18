@@ -2,14 +2,18 @@ import { MongoClient, Db } from "mongodb";
 import { APIGatewayEvent } from "aws-lambda";
 import routes from "./routes";
 import { HttpMethod } from "./types";
+import { Configuration, OpenAIApi } from "openai";
 import S3 = require("aws-sdk/clients/s3");
 import Textract = require("aws-sdk/clients/textract");
+import Polly = require("aws-sdk/clients/polly");
 
 var dbCache: Db;
 const textract = new Textract();
 const s3 = new S3({
   signatureVersion: "v4",
 });
+const polly = new Polly({ apiVersion: "2016-06-10" });
+const openai = new OpenAIApi(new Configuration({ apiKey: process.env.OPENAI_API_KEY }));
 
 /**
  * Get db instance from cache or create a new one.
@@ -37,7 +41,7 @@ const getHandler = (event: APIGatewayEvent) => {
   const path = event.resource; // use resource to get the path without parameters like /note/{id}
   const method = event.httpMethod as HttpMethod;
 
-  const routeHandler = routes[path][method];
+  const routeHandler = routes[path]?.[method];
 
   if (!routeHandler) {
     console.warn(`${method} ${path}: not found, should be ${Object.keys(routes[path])}`);
@@ -54,6 +58,8 @@ export const handler = async (event: APIGatewayEvent) => {
   const db = await getDB();
   const routeHandler = getHandler(event);
 
+  console.log(`${event.httpMethod} ${event.resource} ${event.requestContext.authorizer?.userId}`);
+
   if (!routeHandler) {
     return {
       statusCode: 500,
@@ -68,8 +74,9 @@ export const handler = async (event: APIGatewayEvent) => {
         },
       }),
     };
+
+    console.error(`${event.httpMethod} ${event.resource} not found`);
   }
 
-  console.log(`${event.httpMethod} ${event.resource} ${event.requestContext.authorizer}`);
-  return await routeHandler({ db, s3, textract }, event);
+  return await routeHandler({ db, s3, textract, polly, openai }, event);
 };

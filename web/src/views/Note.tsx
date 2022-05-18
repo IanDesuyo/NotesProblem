@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Container,
   Text,
@@ -11,18 +11,24 @@ import {
   Button,
   Icon,
   Avatar,
+  Center,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { NoteResponse } from "../api/note";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { NoteResponse } from "../providers/ApiProvider.d";
+import { FaRegHeart, FaHeart, FaRegFileAudio } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
-import api from "../api";
 import DownloadButton from "../components/DownloadButton";
+import { ApiContext } from "../providers/ApiProvider";
+import { AccountContext } from "../providers/AccountProvider";
+import AudioButton from "../components/AudioButton";
 
 const Note = () => {
+  const account = useContext(AccountContext);
+  const api = useContext(ApiContext);
   const params = useParams();
   const [isLoading, setLoading] = useState(false);
+  const [isLikePending, setLikePending] = useState(false);
   const [note, setNote] = useState<NoteResponse>();
 
   useEffect(() => {
@@ -46,12 +52,34 @@ const Note = () => {
     };
 
     fetchNote();
-  }, [params.id]);
+  }, [api.note, params.id]);
+
+  const handleLike = async () => {
+    if (!note) {
+      return;
+    }
+
+    setLikePending(true);
+
+    const res = await api.note.like(note._id, !note.like);
+
+    if (res.success && res.data) {
+      setNote({
+        ...note,
+        like: res.data.like,
+        likes: (note.likes || 0) + (res.data.like ? 1 : -1),
+      });
+    }
+
+    setLikePending(false);
+  };
 
   return (
     <Container maxW="container.lg" my={{ base: 2, md: 10 }}>
       {isLoading ? (
-        <Spinner />
+        <Center>
+          <Spinner />
+        </Center>
       ) : note ? (
         <>
           <Flex justifyContent="space-between">
@@ -68,16 +96,34 @@ const Note = () => {
                 <Text>{note.author.displayName}</Text>
               </HStack>
             </Box>
-            <HStack alignItems="start">
-              <Button variant="ghost" rounded="full" w="0">
-                <Icon as={FaRegHeart} size="1xl" />
+            <HStack alignItems="baseline" spacing={1}>
+              <Text>{note.likes || 0}</Text>
+              <Button
+                variant="ghost"
+                rounded="full"
+                w="0"
+                isDisabled={!account.isLoggedIn || isLikePending}
+                onClick={handleLike}
+              >
+                <Icon as={note.like ? FaHeart : FaRegHeart} />
               </Button>
             </HStack>
           </Flex>
           <Divider my={4} />
-          <ReactMarkdown children={note.content} components={ChakraUIRenderer()} />
-          <Flex my={4}>
-            <DownloadButton path={note.originalFile} />
+          <Box textOverflow="scroll" mb={10}>
+            <ReactMarkdown children={note.content} components={ChakraUIRenderer()} />
+          </Box>
+          {note.aiComment && (
+            <Box borderRadius="3xl" bg="gray.100" mb={10} p={4}>
+              <Text fontSize="xl" mb={2}>
+                AI 註解
+              </Text>
+              <Text>{note.aiComment}</Text>
+            </Box>
+          )}
+          <Flex my={4} gap={6} alignItems="center">
+            {note.originalFile && <DownloadButton path={note.originalFile} />}
+            <AudioButton noteId={note._id} path={note.audio} />
           </Flex>
         </>
       ) : (

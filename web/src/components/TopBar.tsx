@@ -186,7 +186,7 @@ const AccountMenu = () => {
         <MenuItem as={NavLink} to="/user/me">
           個人資料
         </MenuItem>
-        <MenuItem as={NavLink} to="/user/me/favorites">
+        <MenuItem as={NavLink} to="/user/me/likes">
           我的最愛
         </MenuItem>
         <MenuItem onClick={account.logout}>登出</MenuItem>

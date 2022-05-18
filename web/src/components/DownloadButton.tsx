@@ -36,7 +36,7 @@ const DownloadButton = ({ path }: DownloadButtonProps) => {
       <Button
         leftIcon={<Icon as={AiOutlineDownload} />}
         onClick={onOpen}
-        disabled={!account.isLoggedIn}
+        isDisabled={!account.isLoggedIn}
       >
         {account.isLoggedIn ? "下載" : "登入以下載原始檔案"}
       </Button>

@@ -4,14 +4,13 @@ import { App, Privacy } from "../../types";
 const projection = {
   $project: {
     title: 1,
-    content: 1,
+    content: { $substr: ["$content", 0, 500] },
     createdAt: 1,
     updatedAt: 1,
     hashtags: 1,
     like: 1,
     likeAt: 1,
     likes: 1,
-    originalFile: 1,
     "author._id": 1,
     "author.displayName": 1,
     "author.createdAt": 1,
@@ -55,13 +54,18 @@ const getUserLikeNotes = async (app: App, userId: ObjectId, page: number = 0) =>
       {
         $lookup: {
           from: "Users",
-          localField: "note.authorId",
+          localField: "authorId",
           foreignField: "_id",
-          as: "note.author",
+          as: "author",
         },
       },
       {
-        $unwind: "$note.author",
+        $unwind: "$author",
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
       },
       projection,
     ])

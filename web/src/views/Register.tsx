@@ -13,11 +13,12 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import api from "../api";
 import { AccountContext } from "../providers/AccountProvider";
+import { ApiContext } from "../providers/ApiProvider";
 
 const Register = () => {
   const account = useContext(AccountContext);
+  const api = useContext(ApiContext);
   const navigate = useNavigate();
   const toast = useToast();
   const [error, setError] = useState("");

@@ -1,6 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import React, { createContext, FC, useState } from "react";
-import api from "../api";
+import { createContext, FC, useState } from "react";
 import {
   AccountProviderProps,
   TokenPayload,

@@ -57,7 +57,7 @@ const PUT = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRes
 
   const note = await dbManager.note.get(app, noteId);
 
-  if (!note || note.authorId.toString() !== userId.toString()) {
+  if (!note || note.author._id.toHexString() !== userId.toHexString()) {
     return response(403, {
       message: "Forbidden",
       i18n: "notes.forbidden",

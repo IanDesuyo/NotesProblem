@@ -22,7 +22,7 @@ const POST = async (app: App, event: APIGatewayEvent): Promise<APIGatewayProxyRe
   const fileBody = Buffer.from(data.fileBody, "base64");
   const fileType = data.fileType;
 
-  if (fileBody.byteLength > 8000000) {
+  if (fileBody.byteLength > 16000000) {
     return response(400, {
       message: "File size is too large",
       i18n: "system.fileSizeTooLarge",

@@ -15,4 +15,5 @@ export interface UpdateNote {
   hashtags?: string[];
   content?: string;
   privacy?: Privacy;
+  [key: string]: any;
 }
