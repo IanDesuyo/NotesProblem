@@ -24,7 +24,7 @@ const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
   const toast = useToast();
 
   const fetchApi = async (method: string, path: string, body?: any) => {
-    const res = await fetch(path, {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}${path}`, {
       method,
       headers: {
         "Content-Type": "application/json",
