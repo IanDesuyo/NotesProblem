@@ -6,6 +6,7 @@ import { Configuration, OpenAIApi } from "openai";
 import S3 = require("aws-sdk/clients/s3");
 import Textract = require("aws-sdk/clients/textract");
 import Polly = require("aws-sdk/clients/polly");
+import corsHandler from "./utils/corsHandler";
 
 var dbCache: Db;
 const textract = new Textract();
@@ -55,6 +56,9 @@ const getHandler = (event: APIGatewayEvent) => {
  * @returns API Gateway response object
  */
 export const handler = async (event: APIGatewayEvent) => {
+  if (event.httpMethod === "OPTIONS") {
+    return corsHandler();
+  }
   const db = await getDB();
   const routeHandler = getHandler(event);
 

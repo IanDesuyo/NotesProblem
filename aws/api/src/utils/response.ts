@@ -12,6 +12,10 @@ export default (statusCode: number, body: ResponseBody, ...props: any[]) => {
   return {
     statusCode,
     body: bodyString,
+    headers: {
+      "Access-Control-Allow-Origin": process.env.CORS_ORIGIN,
+      "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT",
+    },
     ...props,
   } as APIGatewayProxyResult;
 };
