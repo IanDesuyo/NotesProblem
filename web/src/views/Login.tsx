@@ -42,6 +42,12 @@ const Login = () => {
       const params = new URLSearchParams(window.location.search);
       const next = params.get("next");
 
+      toast({
+        title: "登入成功",
+        description: `歡迎，${res.data.payload.displayName}`,
+        status: "success",
+        duration: 3000,
+      });
       return navigate(next || "/");
     }
 

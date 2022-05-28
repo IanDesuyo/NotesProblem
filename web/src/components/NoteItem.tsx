@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Box, Flex, HStack, Tag, Text, Icon, Button, Avatar } from "@chakra-ui/react";
 import { NoteResponse } from "../providers/ApiProvider.d";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { RiVipCrownFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { AccountContext } from "../providers/AccountProvider";
 
@@ -33,7 +34,12 @@ const NoteItem = ({ data, onLike, isLikePending }: NoteItemProps) => {
     >
       <Flex justifyContent="space-between">
         <Box>
-          <Text fontSize="2xl">{data.title}</Text>
+          <Text fontSize="2xl">
+            {data.likes && data.likes > 51 ? (
+              <Icon as={RiVipCrownFill} display="inline-block" color="gold" mr={2} />
+            ) : null}
+            {data.title}
+          </Text>
           <HStack spacing={2} mt={2}>
             {data.hashtags.map(tag => (
               <Tag key={tag}>{tag}</Tag>

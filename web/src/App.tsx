@@ -11,6 +11,7 @@ import Upload from "./views/Upload";
 import ApiProvider from "./providers/ApiProvider";
 import UserIndex from "./views/User/Index";
 import UserLikes from "./views/User/Likes";
+import Help from "./views/Help";
 
 const theme = extendTheme({
   components: {
@@ -32,6 +33,7 @@ const routes = [
   { path: "upload", component: Upload },
   { path: "user/:id", component: UserIndex },
   { path: "user/me/likes", component: UserLikes },
+  { path: "help", component: Help },
 ];
 
 const App = () => {

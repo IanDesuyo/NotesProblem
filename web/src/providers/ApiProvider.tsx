@@ -17,6 +17,8 @@ import {
   UserResponse,
 } from "./ApiProvider.d";
 
+const DEBUG_MODE = localStorage.getItem("NOTESPROBLEM_DEBUG_MODE") === "true";
+
 export const ApiContext = createContext<ApiProviderValue>({} as any);
 
 const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
@@ -24,6 +26,7 @@ const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
   const toast = useToast();
 
   const fetchApi = async (method: string, path: string, body?: any) => {
+    console.log(`${process.env.REACT_APP_API_URL}${path}`);
     const res = await fetch(`${process.env.REACT_APP_API_URL}${path}`, {
       method,
       headers: {
@@ -53,8 +56,7 @@ const ApiProvider: FC<ApiProviderProps> = ({ children }) => {
         status: "error",
         duration: 5000,
       });
-    } else if (true) {
-      // debug
+    } else if (DEBUG_MODE) {
       toast({
         title: jsonBody.message,
         status: "info",

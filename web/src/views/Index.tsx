@@ -1,4 +1,5 @@
 import { Box, Center, Flex, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
+import Footer from "../components/Footer";
 import IndexCard1 from "../components/IndexCard1";
 
 const CARD1_ITEMS = [
@@ -24,8 +25,8 @@ const CARD1_ITEMS = [
     imageSrc: "/static/1577802868.jpg",
   },
   {
-    title: "筆記翻譯",
-    description: "將筆記轉換成多國語言， 讓多元學習更容易",
+    title: "下載筆記",
+    description: "查看原本的筆記，下載影像檔案！",
     buttonText: "查看筆記",
     buttonLink: "/notes",
     imageSrc: "/static/1577802868.jpg",
@@ -63,28 +64,7 @@ const Index = () => {
           ))}
         </Wrap>
       </Box>
-      <Box as="footer" p={10} w="100%">
-        <Flex direction={{ base: "column", md: "row" }} justifyContent="space-between" w="100%">
-          <Box fontSize="sm">
-            <Text>地址：407 102台中市西屯區文華路100號</Text>
-            <Text
-              onClick={() => window.open("tel:+886900000000")}
-              _hover={{ cursor: "pointer", textDecoration: "underline" }}
-            >
-              電話：0900000000
-            </Text>
-            <Text
-              onClick={() => window.open("mailto:d0xxxxxx@o365.fcu.edu.tw")}
-              _hover={{ cursor: "pointer", textDecoration: "underline" }}
-            >
-              聯絡信箱：d0xxxxxx@o365.fcu.edu.tw
-            </Text>
-          </Box>
-          <Text textAlign="center" fontFamily="jf openhuninn" fontSize="xl" alignSelf="flex-end">
-            © 2022 Notesproblem
-          </Text>
-        </Flex>
-      </Box>
+      <Footer />
     </VStack>
   );
 };
