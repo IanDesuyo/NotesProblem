@@ -22,6 +22,7 @@ import DownloadButton from "../components/DownloadButton";
 import { ApiContext } from "../providers/ApiProvider";
 import { AccountContext } from "../providers/AccountProvider";
 import AudioButton from "../components/AudioButton";
+import WordCloud from "../components/WordCloud";
 
 const Note = () => {
   const account = useContext(AccountContext);
@@ -30,6 +31,7 @@ const Note = () => {
   const [isLoading, setLoading] = useState(false);
   const [isLikePending, setLikePending] = useState(false);
   const [note, setNote] = useState<NoteResponse>();
+  const [wordCloud, setWordCloud] = useState<[string, number][]>([]);
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -46,6 +48,21 @@ const Note = () => {
           ...res.data,
           content: res.data.content.replace(/\n/g, "\n\n"),
         });
+
+        const wordCloud: any = {};
+        res.data.content
+          .replace(/\n/g, " ")
+          .replace(/[\d]./g, "")
+          .split(" ")
+          .filter(word => word.length > 0)
+          .forEach(word => {
+            if (wordCloud[word]) {
+              wordCloud[word] += 1;
+            } else {
+              wordCloud[word] = 1;
+            }
+          });
+        setWordCloud(Object.entries(wordCloud));
       }
 
       setLoading(false);
@@ -121,6 +138,23 @@ const Note = () => {
               <Text>{note.aiComment}</Text>
             </Box>
           )}
+          <Box w="100%" h={64} bg="gray.100" borderRadius="3xl" mb={10} p={4}>
+            <WordCloud
+              words={wordCloud}
+              options={{
+                weightFactor: function (s) {
+                  return (Math.pow(s, 1.1) / 128) * window.innerWidth;
+                },
+                color: "random-light",
+              }}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+              id="main-word-cloud"
+              useDiv
+            />
+          </Box>
           <Flex my={4} gap={6} alignItems="center">
             {note.originalFile && <DownloadButton path={note.originalFile} />}
             <AudioButton noteId={note._id} path={note.audio} />
